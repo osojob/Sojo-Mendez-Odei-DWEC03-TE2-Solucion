@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Color Remember</title>
+    <link rel="stylesheet" href="./css/styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Science+Gothic:wght@100..900&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Science+Gothic:wght@100..900&family=Wix+Madefor+Display:wght@400..800&display=swap" rel="stylesheet"> 
+    </head>
+    <body>
+        <main class="container-main">
+            <h1 class="titulo">
+                <span class="naranja">Co</span>l<span class="rojo">or</span>
+                <span class="verde">Re</span>m<span class="magenta">em</span>b<span class="azul">er</span>
+            </h1>
+
+            <h2>Inicia sesión</h2>
+
+            <form id="form-login" class="container-form">
+                <div>
+                    <label for="usuario">Nombre de usuario</label>
+                    <input type="text" id="usuario" name="usuario" required>
+                </div>
+
+                <div>
+                    <label for="contra">Contraseña</label>
+                    <input type="text" id="contra" name="contra" required>
+                </div>
+
+                <button class="boton-enviar" type="submit">Entrar</button>
+
+                <!-- Mensaje de error -->
+                <div id="mensaje-error" class="alerta-error hidden">
+                    <span class="bold">Error:</span> Usuario no registrado
+                </div>
+            </form>
+
+        </main>
+
+        <script type="module" src="./js/main.js"></script>
+    </body>
+</html>
