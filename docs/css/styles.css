@@ -262,6 +262,13 @@ a:visited {
 .baldosa.naranja { fill: #F97800; }
 .baldosa.magenta { fill: #C91DA1; }
 
+.baldosa.activa { filter: brightness(3) drop-shadow(0 0 10px white); }
+.baldosa.hover { 
+    stroke: white;
+    stroke-width: 3;
+}
+.baldosa.error { fill: red; }
+
 .container-interfaz {
     display: flex;
     flex-direction: row;
@@ -286,13 +293,32 @@ a:visited {
 
 .bloque-corazones {
     display: flex;
-    flex-direction: row-reverse;
+    flex-direction: row;
     gap: 6px;
 }
 
 .corazon {
     width: 32px;
     height: auto;
+}
+
+.container-corazon {
+    position: relative;
+}
+
+.x-fallado { 
+    display: none;
+    position: absolute;
+    top: 30%;
+    left: 51%;
+    transform: translate(-50%, -50%);
+    color: black;
+    font-size: 27px;
+    font-weight: bold;
+}
+
+.container-corazon.fallado .x-fallado {
+    display: block;
 }
 
 .container-oculto {
