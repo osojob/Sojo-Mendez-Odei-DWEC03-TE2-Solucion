@@ -1,8 +1,9 @@
 'use strict'
 
 import { iniciarLogin } from './service/inicio-service.js';
-import { iniciarBienvenida } from './service/bienvenida-service.js'; // Importamos la funcion para iniciar la seleccion de bienvenida.html
-import { iniciarJuego } from './service/juego-service.js'
+import { iniciarBienvenida } from './service/bienvenida-service.js';
+import { iniciarJuego } from './service/juego-service.js';
+import { iniciarResultado } from './service/resultado-service.js';
 
 /* --- Página: INDEX (login) --- */
 if (document.getElementById('form-login')) {
@@ -16,8 +17,14 @@ if (document.querySelector('.boton-dific')) {
     iniciarBienvenida();
 }
 
-/* -- Página: JUEGO (tablero) */
+/* --- Página: JUEGO (tablero) --- */
 if (document.getElementById('texto-nivel')) {
     // Hacemos llamada a la funcion de juego
     iniciarJuego();
+}
+
+/* --- Página: RESULTADOS (puntuacion) --- */
+if (document.getElementById('boton-volver')) {
+    // Hacemos llamada a los resultados
+    iniciarResultado();
 }
