@@ -2,9 +2,9 @@
 
 // Creamos constante NIVELES para almacenar los datos relevantes del minijuego
 export const NIVELES = {
-    facil: { baldosas: 3, tiempo: 30, longitud: 6},
-    intermedio: { baldosas: 5, tiempo: 25, longitud: 5},
-    avanzado: { baldosas: 7, tiempo: 20, longitud: 5}
+    facil: { baldosas: 3, tiempo: 30, longitud: 5, velocidad: 325},
+    intermedio: { baldosas: 5, tiempo: 25, longitud: 6, velocidad: 275},
+    avanzado: { baldosas: 7, tiempo: 20, longitud: 7, velocidad: 180}
 }
 
 // Funcion que genera la secuencia de cada nivel

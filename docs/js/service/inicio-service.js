@@ -27,7 +27,7 @@ export function iniciarLogin() {
         const contrasena = document.getElementById('contra').value; // Almacenamos el valor del input contra del HTML
         const userValido = verificarDatos(usuario, contrasena); // Creamos una constate que almacena la funcion que va a verificar los usuarios
 
-        if (userValido) { // Si el usuario cumple el RegEx y además existe
+        if (userValido) { // Si el usuario cumple el RegExp y además existe
             error.classList.add('hidden'); // Si encontramos el usuario, añadimos la clase .hidden en el HTML para que no muestre el error
             window.location.href = './pages/bienvenida.html'; // Redirigimos la página a la de la bienvenida
         } else { // Si da false...

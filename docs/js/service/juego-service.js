@@ -1,9 +1,22 @@
 'use strict'
 
-import { comprobarPulsacion, crearEstadoInicial } from "../model/juego-model.js"
+import { comprobarPulsacion, crearEstadoInicial, NIVELES } from "../model/juego-model.js"
 
 // Funcion para iniciar juego
 export function iniciarJuego() {
+
+    // Creamos objeto para almacenar los sonidos de cada baldosa
+    const SONIDOS = {
+        azul: new Audio('../mp3/do.mp3'),
+        rojo: new Audio('../mp3/re.mp3'),
+        verde: new Audio('../mp3/mi.mp3'),
+        amarillo: new Audio('../mp3/fa.mp3'),
+        magenta: new Audio('../mp3/sol.mp3'),
+        cian: new Audio('../mp3/la.mp3'),
+        naranja: new Audio('../mp3/si.mp3')
+        
+    };
+
     // Leemos el nivel al que el jugador ha entrado
     const nivel = sessionStorage.getItem('nivel');
 
@@ -18,7 +31,8 @@ export function iniciarJuego() {
 
     // Creamos variables
     let tablero;
-    let mostrandoSecuencia = false;
+    let mostrandoSecuencia = true;
+    let intervalo;
 
     // Mostramos el tablero correcto dependiendo de lo elegido
     if (nivel === 'facil') {
@@ -38,19 +52,23 @@ export function iniciarJuego() {
     // Seleccionamos las baldosas
     const baldosas = tablero.querySelectorAll('.baldosa');
 
-    // Recorremos y añadimos listeners con un forEach
+    // Recorremos y añadimos listeners con un forEach para las baldosas
     baldosas.forEach((baldosa, i) => {
         baldosa.indice = i;
+        baldosa.color = baldosa.classList[1]; // Asignamos la clase de color asociada con el sonido
 
         // Evento que se encarga de tener en cuenta si el raton ha entrado en la baldosa
         baldosa.addEventListener('mouseenter', () => {
-            baldosa.classList.add('hover'); // Si entra entra en la baldosa, se añade el hover
+            baldosa.classList.add('hover'); // Si entra en la baldosa, se añade el hover
         });
 
-        // Evento se encarga de tener en cuenta si se ha presionado la baldosa
+        // Evento que se encarga de tener en cuenta si se ha presionado la baldosa
         baldosa.addEventListener('mousedown', () => {
             if (mostrandoSecuencia) return; // Bloqueamos para que cuando se este mostrando, el jugador no pueda pulsar baldosas
-            
+            SONIDOS[baldosa.color].volume = 0.3;
+            SONIDOS[baldosa.color].currentTime = 0;
+            SONIDOS[baldosa.color].play(); // Se reproduce el sonido al pulsar la baldosa
+
             const indicePulsado = baldosa.indice;
             const acierto = comprobarPulsacion(estado.secuencia, estado.posicionActual, indicePulsado);
 
@@ -67,6 +85,8 @@ export function iniciarJuego() {
 
                     // Actualizamos la secuencia
                     if (estado.rondaActual >= estado.secuencia.length) {
+                        // Pausamos el cronometro
+                        clearInterval(intervalo);
                         window.location.href = 'resultado.html';
                     } else {
                         mostrarSecuencia();
@@ -94,7 +114,7 @@ export function iniciarJuego() {
                     setTimeout(() => {
                         baldosa.classList.remove('error');
                         mostrarSecuencia();
-                    }, 300);
+                    }, 250);
                 }
             }
 
@@ -114,28 +134,37 @@ export function iniciarJuego() {
     // Creamos la funcion para mostrar la secuencia en el tablero
     function mostrarSecuencia() {
         mostrandoSecuencia = true;
+        const config = NIVELES[estado.nivel]; // Se accede al nivel que estamos
         const notas = estado.rondaActual + 1; // Establecemos cuantas notas vamos a mostrar
 
-        for (let i = 0; i < notas; i++) {
-            const nota = estado.secuencia[i];
-            const baldosa = encontrarBaldosa(nota);
-            const tiempo = i * 550; // El tiempo entre nota y nota
-
-            // Para iluminar la baldosa
-            setTimeout(() => {
-                baldosa.classList.add('activa');
-            }, tiempo);
-
-            // Para apagar la baldosa
-            setTimeout(() => {
-                baldosa.classList.remove('activa');
-            }, tiempo + 350);
-        }
-
-        // Desbloquear que el jugador pueda seguir pulsando las baldosas
+        // Envolvemos para dar un margen entre secuencias
         setTimeout(() => {
+            
+            for (let i = 0; i < notas; i++) {
+                const nota = estado.secuencia[i];
+                const baldosa = encontrarBaldosa(nota);
+                const tiempo = i * config.velocidad; // El tiempo entre nota y nota, dependiendo de la dificultad
+
+                // Para iluminar la baldosa
+                setTimeout(() => {
+                    baldosa.classList.add('activa'); // Se activa la baldosa
+                    SONIDOS[baldosa.color].volume = 0.7; // Bajamos volumen
+                    SONIDOS[baldosa.color].currentTime = 0; // Reiniciar el sonido
+                    SONIDOS[baldosa.color].play(); // Se reproduce el sonido
+                }, tiempo);
+
+                // Para apagar la baldosa
+                setTimeout(() => {
+                    baldosa.classList.remove('activa');
+                }, tiempo + 250);
+            }
+
+            // Desbloquear que el jugador pueda seguir pulsando las baldosas
+            setTimeout(() => {
                 mostrandoSecuencia = false;
-        }, notas * 550);
+            }, notas * config.velocidad + 250);
+
+        }, 300);
     }
 
     // Creamos una funcion para encontrar la baldosa que se tiene que pulsar
@@ -153,12 +182,11 @@ export function iniciarJuego() {
 
     // Funcion encargada de empezar la partida al pulsar el botón
     function empezarPartida() {
-        console.log('empezarPartida ejecutada');
         // Para evitar que se pueda pulsar dos veces el botón
         botonEmpezar.disabled = true;
 
         // Creamos el cronómetro
-        const intervalo = setInterval(() => {
+        intervalo = setInterval(() => {
             estado.tiempoRestante--;
             document.getElementById('cronometro').textContent = estado.tiempoRestante; // Ponemos el cronometro en el tablero
             sessionStorage.setItem('estado', JSON.stringify(estado));
